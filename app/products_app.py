@@ -1,3 +1,6 @@
+#For now this is using a hardcoded dictionary of products
+#Not checking for validity of input, will have to add check for product in csv
+
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
@@ -37,17 +40,55 @@ print ("\n",
 
 task = input()
 
-
 def ListOp():
 	for product in products:
 		print ("+  ID:" + str(product["id"]), "Name: " + product["name"])
 
-#For now just shows name and price. Will need to add count, check if item exists in csv
+#Will need to add count of products
 def ShowOp():
 	item = input("Please specify a product id:")
 	if int(item) > 0 and int(item) < 21:
 		print ("Name:", products[(int(item)-1)]["name"], "\n"
+			"Department:", products[(int(item)-1)]["department"], "\n"
+			"Aisle:", products[(int(item)-1)]["aisle"], "\n"
 			"Price: ${0:.2f}".format(products[(int(item)-1)]["price"]))
+
+#Will need to append to csv
+def CreateOp():
+	print ("Please specify new product information:")
+	newName = input("Name:")
+	newDept = input("Department")
+	newAisle = input("Aisle:")
+	newPrice = float(input("Price:"))
+	print ("Creating a new product:")
+	products.append({'id':int(len(products)+1), 'name':newName,
+		'department':newDept, 'aisle':newAisle, 'price':newPrice})
+	#print (len(products))
+	print (products[(len(products))-1])
+ 
+#will need to add overwrite of information to csv
+def UpdateOp():
+	item = input("Please specify a product id:")
+	print ("Please specify new product information:")
+	newName = input("Change name to:")
+	newDept = input("Change department to:")
+	newAisle = input("Change aisle to:")
+	newPrice = float(input("Change price to:"))
+	print ("Updating product information. \n New product details:")
+	products[int(item)-1]["name"] = newName
+	products[int(item)-1]["department"] = newDept
+	products[int(item)-1]["aisle"] = newAisle
+	products[int(item)-1]["price"] = newPrice
+	print (products[int(item)-1])
+
+#Will need to delete from csv
+def DestroyOp():
+	item = input("Please specify a product to remove:")
+	products.remove(products[(int(item)-1)])
+	print ("Product deleted.")
+			# below two steps are just a check
+	#print (len(products))
+	#ListOp()
 
 def CRUD(task):
 	if task == "List":
@@ -55,11 +96,11 @@ def CRUD(task):
 	elif task == "Show":
 		ShowOp()
 	elif task == "Create":
-		print ("Add")
+		CreateOp()
 	elif task == "Update":
-		print ("Edit")
+		UpdateOp()
 	elif task == "Destroy":
-		print ("Delete")
+		DestroyOp()
 	else:
 		print ("Sorry, please specify a valid operation")
 		task = input()
