@@ -35,13 +35,13 @@ products = [
 # Reading CSV
 csv_path = "data/products.csv"
 
-with open(csv_path, "r") as inventory:
+'''with open(csv_path, "r") as inventory:
 	inventory = csv.DictReader(inventory)
 	for row in inventory:
 		#print (row) #this prints lists of entire contents with headers
 		#if row['id']=='3': #change number to user input product number to select specific product
 		print (row["id"], row["name"], row["aisle"], row["department"], row["price"])
-		
+'''		
 
 #with open(csv_path, "w") as inventory:
 #	inventory =csv.DictWriter(inventory, fieldnames=["id", "name", "aisle", "department", "row"])
@@ -55,7 +55,7 @@ print ("Products Application")
 print ("----------------")
 print ("Welcome selyukin:")
 print ("There are %i products in the database. Please select an operation:"
-	%(len(products)))
+	%((len(open(csv_path).readlines()))-1)) #https://stackoverflow.com/questions/16108526/count-how-many-lines-are-in-a-csv-python
 print ("\n",
 	"   Operation | Description \n"
 	"   --------- | ----------- \n"
@@ -68,17 +68,31 @@ print ("\n",
 task = input()
 
 def ListOp():
-	for product in products:
-		print ("+  ID:" + str(product["id"]), "Name: " + product["name"])
+	#for product in products:
+	#	print ("+  ID:" + str(product["id"]), "Name: " + product["name"])
+	with open(csv_path, "r") as inventory:
+		inventory = csv.DictReader(inventory)
+		for row in inventory:
+			print ("+  ID :" + row["id"] + " Name: " + row["name"])
 
-#Will need to add count of products
+#Will need to add count of products?
+#Need to check is product ID is in the CSV, handle invalid identifiers
 def ShowOp():
 	item = input("Please specify a product id:")
 	if int(item) > 0 and int(item) < 21:
-		print ("Name:", products[(int(item)-1)]["name"], "\n"
-			"Department:", products[(int(item)-1)]["department"], "\n"
-			"Aisle:", products[(int(item)-1)]["aisle"], "\n"
-			"Price: ${0:.2f}".format(products[(int(item)-1)]["price"]))
+	#	print ("Name:", products[(int(item)-1)]["name"], "\n"
+	#		"Department:", products[(int(item)-1)]["department"], "\n"
+	#		"Aisle:", products[(int(item)-1)]["aisle"], "\n"
+	#		"Price: ${0:.2f}".format(products[(int(item)-1)]["price"]))
+		with open(csv_path, "r") as inventory:
+			inventory = csv.DictReader(inventory)
+			for row in inventory:
+				if row['id']==item:
+					print ("Name:", row["name"], "\n",
+						"Department:", row["department"], "\n",
+						"Aisle:", row["aisle"], "\n",
+						"Price: $" + row["price"])
+
 
 #Will need to append to csv
 def CreateOp():
