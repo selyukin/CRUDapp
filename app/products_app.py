@@ -1,6 +1,13 @@
 #For now this is using a hardcoded dictionary of products
 #Not checking for validity of input, will have to add check for product in csv
 
+
+
+# Need to modify existing code so products = read_from_csv instead of dictionary
+# Use code from shopping_cart, but instead of a new list of IDs, check in csv
+
+import csv
+
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
@@ -24,11 +31,31 @@ products = [
     {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}
 ]
 
+
+# Reading CSV
+csv_path = "data/products.csv"
+
+with open(csv_path, "r") as inventory:
+	inventory = csv.DictReader(inventory)
+	for row in inventory:
+		#print (row) #this prints lists of entire contents with headers
+		#if row['id']=='3': #change number to user input product number to select specific product
+		print (row["id"], row["name"], row["aisle"], row["department"], row["price"])
+		
+
+#with open(csv_path, "w") as inventory:
+#	inventory =csv.DictWriter(inventory, fieldnames=["id", "name", "aisle", "department", "row"])
+#	writer.writerow
+
+
+#THE CRUD APP
+
 print ("----------------")
 print ("Products Application")
 print ("----------------")
 print ("Welcome selyukin:")
-print ("There are _ products in the database. Please select an operation:")
+print ("There are %i products in the database. Please select an operation:"
+	%(len(products)))
 print ("\n",
 	"   Operation | Description \n"
 	"   --------- | ----------- \n"
@@ -109,4 +136,3 @@ def CRUD(task):
 
 #Run application
 CRUD(task)
-
