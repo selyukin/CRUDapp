@@ -12,10 +12,10 @@ Download the source code:
 
 ```shell
 git clone https://github.com/selyukin/CRUDapp.git
-cd some/path/to/repo/
+cd #some/path/to/repo/#
 ```
 
-Download the [`products.csv` file](https://raw.githubusercontent.com/prof-rossetti/nyu-info-2335-70-201706/master/projects/crud-app/products.csv) and save it as `data/products.csv`.
+Download the [`products.csv`](https://raw.githubusercontent.com/prof-rossetti/nyu-info-2335-70-201706/master/projects/crud-app/products.csv) file and save it as `data/products.csv`.
 
 ## Usage
 
