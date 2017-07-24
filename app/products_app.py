@@ -41,7 +41,8 @@ print ("\n",
 	"   Show      | Show information about a product. \n"
 	"   Create    | Add a new product. \n"
 	"   Update    | Edit an existing product. \n"
-	"   Destroy   | Delete an existing product.")
+	"   Destroy   | Delete an existing product. \n"
+	"   Exit      | Exit the application.")
 
 task = input()
 
@@ -74,6 +75,10 @@ def ShowOp():
 		ShowOp()
 
 def CreateOp():
+	'''This functions prompts the user to enter information
+	for a new product. It then appends this information to
+	the dictionary and writes everything out to the CSV,
+	overwriting the original.'''
 	print ("Please specify new product information:")
 	newName = input("Name:")
 	newDept = input("Department:")
@@ -85,6 +90,31 @@ def CreateOp():
 	WriteCSV()
 	print ("There are now %i products in the inventory." %(len(inventory)))
 	
+def UpdateOp():
+	'''This function prompts the user for the ID of
+	a product to update. The user is then prompted
+	to enter all the new information for this product.
+	The dictionary is then updated with this new product
+	information and then written out to the CSV,
+	overwriting the original.
+	'''
+	item = input("Please specify a product id:")
+	print ("Please specify new product information:")
+	newName = input("Change name to:")
+	newDept = input("Change department to:")
+	newAisle = input("Change aisle to:")
+	newPrice = float(input("Change price to:"))
+	print ("Updating product information. \n New product details:")
+	item = int(item) - 1
+	inventory[int(item)]["name"] = newName
+	inventory[int(item)]["department"] = newDept
+	inventory[int(item)]["aisle"] = newAisle
+	inventory[int(item)]["price"] = newPrice
+	WriteCSV()
+	print ("Name:", inventory[int(item)]["name"], "\n",
+			"Department:", inventory[int(item)]["department"], "\n",
+			"Aisle:", inventory[int(item)]["aisle"], "\n",
+			"Price: $" + str(inventory[int(item)]["price"]))
 
 '''
 #The below functions still utilize the dictionary rather than the CSV
@@ -111,35 +141,15 @@ products = [
     {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}
 ]
 '''
- 
-#will need to add overwrite of information to csv
-def UpdateOp():
-	item = input("Please specify a product id:")
-	print ("Please specify new product information:")
-	newName = input("Change name to:")
-	newDept = input("Change department to:")
-	newAisle = input("Change aisle to:")
-	newPrice = float(input("Change price to:"))
-	print ("Updating product information. \n New product details:")
-	item = int(item) - 1
-	inventory[int(item)]["name"] = newName
-	inventory[int(item)]["department"] = newDept
-	inventory[int(item)]["aisle"] = newAisle
-	inventory[int(item)]["price"] = newPrice
-	WriteCSV()
-	print ("Name:", inventory[int(item)]["name"], "\n",
-			"Department:", inventory[int(item)]["department"], "\n",
-			"Aisle:", inventory[int(item)]["aisle"], "\n",
-			"Price: $" + str(inventory[int(item)]["price"]))
 
 #Will need to delete from csv
 def DestroyOp():
 	item = input("Please specify a product to remove:")
-	products.remove(products[(int(item)-1)])
-	print ("Product deleted.")
-			# below two steps are just a check
-	#print (len(products))
-	#ListOp()
+	item = int(item) - 1
+	inventory.remove(inventory[item])
+	print ("Product deleted. There are now {0} products in the inventory"
+		.format(len(inventory)))
+	WriteCSV()
 
 def CRUD(task):
 	if task == "List":
@@ -152,6 +162,8 @@ def CRUD(task):
 		UpdateOp()
 	elif task == "Destroy":
 		DestroyOp()
+	elif task == "Exit":
+		print ("Goodbye!")
 	else:
 		print ("Sorry, please specify a valid operation")
 		task = input()
