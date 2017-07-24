@@ -17,6 +17,15 @@ with open(csv_path, "r") as file:
 		for row in reader:
 			inventory.append(row)
 
+# Created a function for writing the dictionary back to CSV
+def WriteCSV():
+	with open(csv_path, "w") as file:
+		writer = csv.DictWriter(file, 
+			fieldnames=["id","name","aisle","department","price"])
+		writer.writeheader()
+		for product in inventory:
+			writer.writerow(product)
+
 #THE CRUD APP
 
 print ("----------------")
@@ -44,7 +53,6 @@ def ListOp():
 		print ("+  ID:" + inventory[i]["id"] + 
 			", Name: " + inventory[i]["name"])
 
-#Still need to add count of products
 def ShowOp():
 	'''This function requests a user input for a product 
 	identifier, then reads the dictionary and prints the
@@ -65,6 +73,18 @@ def ShowOp():
 		print ("Sorry, this item is not in the inventory.")
 		ShowOp()
 
+def CreateOp():
+	print ("Please specify new product information:")
+	newName = input("Name:")
+	newDept = input("Department:")
+	newAisle = input("Aisle:")
+	newPrice = float(input("Price:"))
+	print ("Creating a new product.")
+	inventory.append({'id':int(len(inventory)+1), 'name':newName,
+		'department':newDept, 'aisle':newAisle, 'price':newPrice})
+	WriteCSV()
+	print ("There are now %i products in the inventory." %(len(inventory)))
+	
 
 '''
 #The below functions still utilize the dictionary rather than the CSV
@@ -91,24 +111,6 @@ products = [
     {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}
 ]
 '''
-#Will need to append to csv
-def CreateOp():
-	print ("Please specify new product information:")
-	newName = input("Name:")
-	newDept = input("Department:")
-	newAisle = input("Aisle:")
-	newPrice = float(input("Price:"))
-	print ("Creating a new product:")
-	inventory.append({'id':int(len(inventory)+1), 'name':newName,
-		'department':newDept, 'aisle':newAisle, 'price':newPrice})
-	with open(csv_path, "w") as file:
-		writer = csv.DictWriter(file, 
-			fieldnames=["id","name","aisle","department","price"])
-		writer.writeheader()
-		for product in inventory:
-			writer.writerow(product)
-	print ("There are now %i products in the inventory." %(len(inventory)))
-	
  
 #will need to add overwrite of information to csv
 def UpdateOp():
@@ -119,11 +121,16 @@ def UpdateOp():
 	newAisle = input("Change aisle to:")
 	newPrice = float(input("Change price to:"))
 	print ("Updating product information. \n New product details:")
-	products[int(item)-1]["name"] = newName
-	products[int(item)-1]["department"] = newDept
-	products[int(item)-1]["aisle"] = newAisle
-	products[int(item)-1]["price"] = newPrice
-	print (products[int(item)-1])
+	item = int(item) - 1
+	inventory[int(item)]["name"] = newName
+	inventory[int(item)]["department"] = newDept
+	inventory[int(item)]["aisle"] = newAisle
+	inventory[int(item)]["price"] = newPrice
+	WriteCSV()
+	print ("Name:", inventory[int(item)]["name"], "\n",
+			"Department:", inventory[int(item)]["department"], "\n",
+			"Aisle:", inventory[int(item)]["aisle"], "\n",
+			"Price: $" + str(inventory[int(item)]["price"]))
 
 #Will need to delete from csv
 def DestroyOp():
