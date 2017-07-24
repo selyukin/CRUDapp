@@ -7,6 +7,15 @@ import csv
 # Reading CSV
 csv_path = "data/products.csv"
 
+'''updated with Prof's code for cleaner script, 
+appends rows read from CSV to dictionary
+rather than rereading CSV multiple times'''
+inventory = []
+
+with open(csv_path, "r") as file:
+		reader = csv.DictReader(file)
+		for row in reader:
+			inventory.append(row)
 
 #THE CRUD APP
 
@@ -15,7 +24,7 @@ print ("Products Application")
 print ("----------------")
 print ("Welcome selyukin:")
 print ("There are %i products in the database. Please select an operation:"
-	%((len(open(csv_path).readlines()))-1)) #https://stackoverflow.com/questions/16108526/count-how-many-lines-are-in-a-csv-python
+	%((len(inventory)))) 
 print ("\n",
 	"   Operation | Description \n"
 	"   --------- | ----------- \n"
@@ -28,30 +37,36 @@ print ("\n",
 task = input()
 
 def ListOp():
-	'''This function reads a CSV and prints out
-	the specified columns for each row'''
-	with open(csv_path, "r") as inventory:
-		inventory = csv.DictReader(inventory)
-		for row in inventory:
-			print ("+  ID :" + row["id"] + " Name: " + row["name"])
+	'''This function reads the dictionary created
+	from reading the CSV and prints out
+	the ID and name of each product'''
+	for i in range(0, len(inventory)):
+		print ("+  ID:" + inventory[i]["id"] + 
+			", Name: " + inventory[i]["name"])
 
 #Still need to add count of products
 def ShowOp():
-	'''This function requests a user input for a product identifier
-	then reads a csv and prints the product info for the profuct matching the ID.
-	At the moment it can't handle product IDs not in the CSV.'''
+	'''This function requests a user input for a product 
+	identifier, then reads the dictionary and prints the
+	product info for the product matching the ID. If the
+	product ID is not in the inventory the app states so 
+	and prompts the user for a new ID.'''
 	item = input("Please specify a product id:")
-	if int(item) > 0 and int(item) < 21:
-		with open(csv_path, "r") as inventory:
-			inventory = csv.DictReader(inventory)
-			for row in inventory:
-				if row['id']==item:
-					print ("Name:", row["name"], "\n",
-						"Department:", row["department"], "\n",
-						"Aisle:", row["aisle"], "\n",
-						"Price: $" + row["price"])
+	ids = []
+	for i in range(0, len(inventory)):
+		ids.append(inventory[i]["id"])
+	if item in ids:
+		item = int(item) - 1
+		print ("Name:", inventory[int(item)]["name"], "\n",
+				"Department:", inventory[int(item)]["department"], "\n",
+				"Aisle:", inventory[int(item)]["aisle"], "\n",
+				"Price: $" + inventory[int(item)]["price"])
+	else:
+		print ("Sorry, this item is not in the inventory.")
+		ShowOp()
 
 
+'''
 #The below functions still utilize the dictionary rather than the CSV
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -75,7 +90,7 @@ products = [
     {"id":19, "name": "Gluten Free Quinoa Three Cheese & Mushroom Blend", "department": "dry goods pasta", "aisle": "grains rice dried goods", "price": 3.99},
     {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}
 ]
-
+'''
 #Will need to append to csv
 def CreateOp():
 	print ("Please specify new product information:")
