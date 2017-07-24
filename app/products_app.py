@@ -95,14 +95,20 @@ products = [
 def CreateOp():
 	print ("Please specify new product information:")
 	newName = input("Name:")
-	newDept = input("Department")
+	newDept = input("Department:")
 	newAisle = input("Aisle:")
 	newPrice = float(input("Price:"))
 	print ("Creating a new product:")
-	products.append({'id':int(len(products)+1), 'name':newName,
+	inventory.append({'id':int(len(inventory)+1), 'name':newName,
 		'department':newDept, 'aisle':newAisle, 'price':newPrice})
-	#print (len(products))
-	print (products[(len(products))-1])
+	with open(csv_path, "w") as file:
+		writer = csv.DictWriter(file, 
+			fieldnames=["id","name","aisle","department","price"])
+		writer.writeheader()
+		for product in inventory:
+			writer.writerow(product)
+	print ("There are now %i products in the inventory." %(len(inventory)))
+	
  
 #will need to add overwrite of information to csv
 def UpdateOp():
